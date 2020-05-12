@@ -1,0 +1,25 @@
+General theory :
+
+https://medium.com/@ageitgey/natural-language-processing-is-fun-9a0bff37854e
+
+https://medium.com/dair-ai/nlp-year-in-review-2019-fb8d523bcb19
+
+
+For parsing :
+https://explosion.ai/blog/parsing-english-in-python
+
+https://explosion.ai/demos/displacy (demo)
+
+
+For Name Entity Recognition (NER) :
+https://explosion.ai/demos/displacy-ent (demo)
+
+
+Coreference: 
+https://medium.com/huggingface/state-of-the-art-neural-coreference-resolution-for-chatbots-3302365dcf30
+
+https://huggingface.co/coref/ (demo)
+
+
+To tune the data:
+https://spacy.io/usage/training#section-ner
