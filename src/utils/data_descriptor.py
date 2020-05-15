@@ -86,4 +86,3 @@ if __name__ == "__main__":
     SENTENCE = descriptor(SENTENCE, alphanumeric_only=ALPHANUM_ONLY)
     print("Output :")
     print(SENTENCE)
-
