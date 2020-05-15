@@ -1,4 +1,4 @@
-from src.utils.sample_data import SmallData
+from src.utils.sample_data import SampleData
 from src.utils.post_processing import sentance_to_string
 
 
