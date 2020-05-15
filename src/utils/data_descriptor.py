@@ -64,6 +64,13 @@ def descriptor(list_text, alphanumeric_only=True):
     return np.array(outputs)
 
 
+def convert_labels(sentence, label):
+    new_label = np.full(len(sentence), False)
+    for i in range(len(label)):
+        new_label += (sentence == label[i])
+    return 1*new_label
+
+
 if __name__ == "__main__":
 
     ALPHANUM_ONLY = False
@@ -72,6 +79,8 @@ if __name__ == "__main__":
     FILL_WITH = "$"
 
     SENTENCE = "Journey!? Wow... u just became cooler.  hehe... (is that possible!?)"
+    LABEL = "Journey!? Wow... u"
+
     print("Input : \n", SENTENCE)
 
     SENTENCE = vectorize_string(SENTENCE, alphanumeric_only=ALPHANUM_ONLY,
@@ -79,6 +88,14 @@ if __name__ == "__main__":
                                 word_size=WORD_SIZE,
                                 fill_with=FILL_WITH
                                 )
+
+    LABEL = vectorize_string(LABEL, alphanumeric_only=ALPHANUM_ONLY,
+                             sentence_size=SENTENCE_SIZE,
+                             word_size=WORD_SIZE,
+                             fill_with=FILL_WITH
+                             )
+    print("Label :")
+    print(convert_labels(SENTENCE, LABEL))
 
     print("In a fixed size matrix :")
     print(SENTENCE)
