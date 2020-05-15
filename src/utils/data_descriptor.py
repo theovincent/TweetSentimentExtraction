@@ -25,7 +25,7 @@ def alphanumeric(text, lower=True):
     return new_text
 
 
-def vectorize_string(text, sentence_size=15, word_size=12, alphanumeric_only=True):
+def vectorize_string(text, sentence_size=15, word_size=12, alphanumeric_only=True, fill_with="$"):
     list_text = text.split()
 
     if alphanumeric_only:
@@ -37,7 +37,7 @@ def vectorize_string(text, sentence_size=15, word_size=12, alphanumeric_only=Tru
         list_text = np.delete(list_text, to_delete)
         print("alphanumeric only \n", list_text)
 
-    filled_text = np.full(sentence_size, "$" * word_size)
+    filled_text = np.full(sentence_size, fill_with * word_size)
     for i in range(min(sentence_size, len(list_text))):
         s = len(list_text[i])
         if s < word_size:
@@ -67,10 +67,19 @@ def descriptor(list_text, alphanumeric_only=True):
 if __name__ == "__main__":
 
     ALPHANUM_ONLY = False
+    WORD_SIZE = 12
+    SENTENCE_SIZE = 15
+    FILL_WITH = "$"
+
     SENTENCE = "Journey!? Wow... u just became cooler.  hehe... (is that possible!?)"
     print("Input : \n", SENTENCE)
 
-    SENTENCE = vectorize_string(SENTENCE, alphanumeric_only=ALPHANUM_ONLY)
+    SENTENCE = vectorize_string(SENTENCE, alphanumeric_only=ALPHANUM_ONLY,
+                                sentence_size=SENTENCE_SIZE,
+                                word_size=WORD_SIZE,
+                                fill_with=FILL_WITH
+                                )
+
     print("In a fixed size matrix :")
     print(SENTENCE)
 
