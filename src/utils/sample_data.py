@@ -4,8 +4,8 @@ import numpy as np
 import pandas as pd
 
 
-class SmallData:
-    def __init__(self, path_csv, nb_samples=10, percentage=None, save=False, path_save=None):
+class SampleData:
+    def __init__(self, path_csv, nb_samples=100, percentage=None, save=False, path_save=None):
         """
         percentage = [positive, negative]
         The percentage of neutral is computed as follow : 1 - positive - negative
@@ -26,18 +26,18 @@ class SmallData:
         self.nb_neu = int(round(nb_samples * (1 - np.sum(self.percentage))))
 
         # Fill the sets
-        self.small_data = None
+        self.sample_data = None
         self.fill_small_data()
 
-        # Shuffle small_data
-        self.small_data = self.small_data.sample(frac=1)
+        # Shuffle sample_data
+        self.sample_data = self.sample_data.sample(frac=1)
 
         # Save
         if save:
             if path_save is None:
                 path_save = Path("../../data/samples/sample_{}.csv".format(nb_samples))
             pass
-            self.small_data.to_csv(path_save, index=False)
+            self.sample_data.to_csv(path_save, index=False)
 
     def fill_small_data(self):
         # Sample the big data set
@@ -45,18 +45,17 @@ class SmallData:
         neu = self.data[self.data['sentiment'] == "neutral"].sample(self.nb_neu)
         neg = self.data[self.data['sentiment'] == "negative"].sample(self.nb_neg)
 
-        self.small_data = pd.concat([pos, neu, neg])
+        self.sample_data = pd.concat([pos, neu, neg])
 
         # Change the value of the label
         mapping = {'positive': 1, 'neutral': 0, 'negative': -1}
-        self.small_data = self.small_data.replace({'sentiment': mapping})
+        self.sample_data = self.sample_data.replace({'sentiment': mapping})
 
 
 if __name__ == "__main__":
     CSV_NAME = "train.csv"
     CSV_PATH = Path("../../data/") / CSV_NAME
 
-    SMALL_DATA = SmallData(CSV_PATH, save=True)
+    SAMPLE_DATA = SampleData(CSV_PATH, save=True)
 
-    print(SMALL_DATA.small_data)
-
+    print(SAMPLE_DATA.sample_data)
