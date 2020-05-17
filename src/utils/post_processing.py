@@ -9,9 +9,9 @@ def pred_to_sentence(original_strings, predictions):
     )
 
 
-def sentance_to_string(sentence):
+def sentence_to_string(sentence):
     return " ".join(sentence)
 
 
 def filter_character(string, character):
-    return string.translate({character: None})
+    return string.replace(character, "")
