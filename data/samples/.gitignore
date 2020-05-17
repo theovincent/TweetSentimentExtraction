@@ -1,2 +1,5 @@
 
 *.csv
+
+!sample_100.csv
+!sample_1000.csv
