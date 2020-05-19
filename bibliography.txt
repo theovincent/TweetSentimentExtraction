@@ -32,4 +32,3 @@ https://nlp.stanford.edu/projects/glove/
 
 Deep neural network:
 https://huggingface.co/transformers/model_doc/bert.html
->>>>>>> dab4a3d2f10113dcac5078a8a2f1bfe7e2c9d660
