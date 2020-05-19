@@ -25,7 +25,7 @@ def get_description(word, descriptions, word_size, fill_with):
         return np.ones(word_size) * fill_with
 
 
-def descriptor(tweet, descriptions, sentence_size=15, word_size=50, alphanumeric_only=True, fill_with=0):
+def one_description(tweet, descriptions, sentence_size=15, word_size=50, alphanumeric_only=True, fill_with=0):
     # Initialise output
     output = np.ones((sentence_size, word_size)) * fill_with
 
@@ -39,7 +39,22 @@ def descriptor(tweet, descriptions, sentence_size=15, word_size=50, alphanumeric
         output[idx_word] = get_description(list_words[idx_word], descriptions, word_size, fill_with)
         idx_word += 1
 
-    return output
+    return list_words, np.reshape(output, -1)
+
+
+def descriptor(tweets, descriptions, sentence_size=15, word_size=50, alphanumeric_only=True, fill_with=0):
+    nb_tweets = len(tweets)
+    # Initialize sets
+    x_string_train = []
+    x_train = np.ones((nb_tweets, sentence_size * word_size)) * fill_with
+
+    # Describe each tweet
+    for idx_tweet in range(nb_tweets):
+        description = one_description(tweets[idx_tweet], descriptions, sentence_size, word_size, alphanumeric_only, fill_with)
+        x_string_train.append(description[0])
+        x_train[idx_tweet] = description[1]
+
+    return x_string_train, x_train
 
 
 if __name__ == "__main__":
@@ -53,10 +68,11 @@ if __name__ == "__main__":
 
     # -- Parameters -- #
     WORD_SIZE = 50  # 50 or 100 or 200 or 300
-    SENTENCE_SIZE = 15  # What ever
+    SENTENCE_SIZE = 20  # What ever
     FILL_WITH = 0  # If a word is not in the descriptions, [0, ..., 0] will describe it.
 
-    TWEET = SAMPLE["text"][0]
-    print(TWEET)
-    OUTPUT = descriptor(TWEET, DESCRIPTIONS, SENTENCE_SIZE, WORD_SIZE, alphanumeric_only=False)
-    print(OUTPUT)
+    (X_STRING_TRAIN, X_TRAIN) = one_description(SAMPLE["text"][0], DESCRIPTIONS, SENTENCE_SIZE, WORD_SIZE, alphanumeric_only=False)
+    print(X_STRING_TRAIN)
+    print("X_STRING_TRAIN.shape", len(X_STRING_TRAIN))
+    print(X_TRAIN)
+    print("X_TRAIN.shape", X_TRAIN.shape)
