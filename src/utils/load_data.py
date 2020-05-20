@@ -7,7 +7,7 @@ from src.utils.data_descriptor import vectorize_string
 from src.utils.data_descriptor import convert_labels
 
 
-def load_data(data, alphanum_only, word_size, sentence_size, fill_with):
+def load_data(data, word_size, sentence_size, fill_with, alphanum_only=False):
 
     # list of the tweets, at the right shape, with "$" to fill
     x_string = []
@@ -41,7 +41,7 @@ def load_data(data, alphanum_only, word_size, sentence_size, fill_with):
         y.append(label)
 
         sentence = descriptor(sentence, alphanumeric_only=alphanum_only).flatten()
-        x = np.concatenate((sentence, [tweet[3]] * feeling_weight))
+        x = np.concatenate((sentence, [tweet[3] * feeling_weight]))
         x_scalar.append(x)
 
     x_scalar = np.array(x_scalar)
@@ -62,7 +62,7 @@ if __name__ == '__main__':
     SENTENCE_SIZE = 15
     FILL_WITH = "$"
 
-    X_STRING, X_SCALAR, Y = load_data(DATA, ALPHANUM_ONLY, WORD_SIZE, SENTENCE_SIZE, FILL_WITH)
+    X_STRING, X_SCALAR, Y = load_data(DATA, WORD_SIZE, SENTENCE_SIZE, FILL_WITH, ALPHANUM_ONLY)
 
     print(DATA.shape, X_STRING.shape, Y.shape, X_SCALAR.shape)
 
