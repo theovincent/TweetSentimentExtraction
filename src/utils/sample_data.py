@@ -23,7 +23,7 @@ class SampleData:
         # Get the numbers of samples in each class
         self.nb_pos = int(round(nb_samples * self.percentage[0]))
         self.nb_neg = int(round(nb_samples * self.percentage[1]))
-        self.nb_neu = int(round(nb_samples * (1 - np.sum(self.percentage))))
+        self.nb_neu = nb_samples - self.nb_pos - self.nb_neg
 
         # Fill the sets
         self.sample_data = None
