@@ -21,7 +21,7 @@ def get_description(word, descriptions, word_size, fill_with):
     if np.sum(search) > 0:
         return descriptions[search].iloc[0, 1:].to_numpy()
     else:
-        print("Not seen...")
+        print(word, ": not seen...")
         return np.ones(word_size) * fill_with
 
 
@@ -35,7 +35,6 @@ def one_description(tweet, descriptions, sentence_size=15, word_size=50, alphanu
     idx_word = 0
 
     while idx_word < nb_words and idx_word < sentence_size:
-        print(list_words[idx_word])
         output[idx_word] = get_description(list_words[idx_word], descriptions, word_size, fill_with)
         idx_word += 1
 
@@ -59,7 +58,7 @@ def descriptor(tweets, descriptions, sentence_size=15, word_size=50, alphanumeri
 
 if __name__ == "__main__":
     # -- Get the data -- #
-    PATH_SAMPLE = Path("../../../data/samples/sample_100.csv")
+    PATH_SAMPLE = Path("../../../data/samples/sample_100_train.csv")
     SAMPLE = pd.read_csv(PATH_SAMPLE)
 
     # -- Get the descriptor -- #
@@ -71,7 +70,9 @@ if __name__ == "__main__":
     SENTENCE_SIZE = 20  # What ever
     FILL_WITH = 0  # If a word is not in the descriptions, [0, ..., 0] will describe it.
 
-    (X_STRING_TRAIN, X_TRAIN) = one_description(SAMPLE["text"][0], DESCRIPTIONS, SENTENCE_SIZE, WORD_SIZE, alphanumeric_only=False)
+    (X_STRING_TRAIN, X_TRAIN) = descriptor(SAMPLE["text"], DESCRIPTIONS, SENTENCE_SIZE, WORD_SIZE, FILL_WITH)
+
+    # (X_STRING_TRAIN, X_TRAIN) = one_description(SAMPLE["text"][0], DESCRIPTIONS, SENTENCE_SIZE, WORD_SIZE, alphanumeric_only=False)
     print(X_STRING_TRAIN)
     print("X_STRING_TRAIN.shape", len(X_STRING_TRAIN))
     print(X_TRAIN)
