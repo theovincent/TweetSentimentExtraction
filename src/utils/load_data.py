@@ -2,12 +2,12 @@ import pandas as pd
 from pathlib import Path
 import numpy as np
 
-from src.utils.data_descriptor import descriptor
-from src.utils.data_descriptor import vectorize_string
-from src.utils.data_descriptor import convert_labels
+from utils.data_descriptor import descriptor
+from utils.data_descriptor import vectorize_string
+from utils.data_descriptor import convert_labels
 
 
-def load_data(data, alphanum_only, word_size, sentence_size, fill_with):
+def load_data(data, word_size, sentence_size, fill_with, split_punctuation=False, alphanum_only=False):
 
     # list of the tweets, at the right shape, with "$" to fill
     x_string = []
@@ -26,12 +26,14 @@ def load_data(data, alphanum_only, word_size, sentence_size, fill_with):
         sentence = vectorize_string(tweet[1], alphanumeric_only=alphanum_only,
                                     sentence_size=sentence_size,
                                     word_size=word_size,
+                                    split_punctuation=split_punctuation,
                                     fill_with=fill_with
                                     )
 
         label = vectorize_string(tweet[2], alphanumeric_only=alphanum_only,
                                  sentence_size=sentence_size,
                                  word_size=word_size,
+                                 split_punctuation=split_punctuation,
                                  fill_with=fill_with
                                  )
 
@@ -41,7 +43,7 @@ def load_data(data, alphanum_only, word_size, sentence_size, fill_with):
         y.append(label)
 
         sentence = descriptor(sentence, alphanumeric_only=alphanum_only).flatten()
-        x = np.concatenate((sentence, [tweet[3]] * feeling_weight))
+        x = np.concatenate((sentence, [tweet[3] * feeling_weight]))
         x_scalar.append(x)
 
     x_scalar = np.array(x_scalar)
@@ -61,8 +63,9 @@ if __name__ == '__main__':
     WORD_SIZE = 12
     SENTENCE_SIZE = 15
     FILL_WITH = "$"
+    SPLIT_PUNCTUATION = False
 
-    X_STRING, X_SCALAR, Y = load_data(DATA, ALPHANUM_ONLY, WORD_SIZE, SENTENCE_SIZE, FILL_WITH)
+    X_STRING, X_SCALAR, Y = load_data(DATA, WORD_SIZE, SENTENCE_SIZE, FILL_WITH, SPLIT_PUNCTUATION, ALPHANUM_ONLY)
 
     print(DATA.shape, X_STRING.shape, Y.shape, X_SCALAR.shape)
 

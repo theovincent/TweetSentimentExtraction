@@ -1,5 +1,6 @@
-
 *.csv
 
-!sample_100.csv
-!sample_1000.csv
+!sample_100_train.csv
+!sample_1000_train.csv
+!sample_100_validation.csv
+!sample_1000_validation.csv
