@@ -3,9 +3,8 @@
 
 
 import numpy as np
-import pandas as pd
-import os
 import re
+from nltk.tokenize import WordPunctTokenizer
 
 
 # NOT USED AT THE MOMENT
@@ -25,31 +24,35 @@ def alphanumeric(text, lower=True):
     return new_text
 
 
-def vectorize_string(text, sentence_size=15, word_size=12, alphanumeric_only=True, fill_with="$"):
-    list_text = text.split()
+def vectorize_string(text, sentence_size=15, word_size=12,
+                     split_punctuation=False, alphanumeric_only=True, fill_with="$"):
+    if split_punctuation:
+        list_words = WordPunctTokenizer().tokenize(text)
+    else:
+        list_words = text.split()
 
     if alphanumeric_only:
         to_delete = []
-        for i in range(len(list_text)):
-            list_text[i] = alphanumeric(list_text[i])
-            if list_text[i] == "":
+        for i in range(len(list_words)):
+            list_words[i] = alphanumeric(list_words[i])
+            if list_words[i] == "":
                 to_delete.append(i)
-        list_text = np.delete(list_text, to_delete)
-        print("alphanumeric only \n", list_text)
+        list_words = np.delete(list_words, to_delete)
+        print("alphanumeric only \n", list_words)
 
     filled_text = np.full(sentence_size, fill_with * word_size)
-    for i in range(min(sentence_size, len(list_text))):
-        s = len(list_text[i])
+    for i in range(min(sentence_size, len(list_words))):
+        s = len(list_words[i])
         if s < word_size:
-            filled_text[i] = list_text[i] + filled_text[i]
+            filled_text[i] = list_words[i] + filled_text[i]
         else:
-            filled_text[i] = list_text[i][:word_size]
+            filled_text[i] = list_words[i][:word_size]
 
     return filled_text
 
 
-def descriptor(list_text, alphanumeric_only=True):
-    inputs = list_text
+def descriptor(list_words, alphanumeric_only=True):
+    inputs = list_words
     outputs = []
 
     for word in inputs:
@@ -77,8 +80,10 @@ if __name__ == "__main__":
     WORD_SIZE = 12
     SENTENCE_SIZE = 15
     FILL_WITH = "$"
+    SPLIT_PUNCTUATION = False
 
     SENTENCE = "Journey!? Wow... u just became cooler.  hehe... (is that possible!?)"
+
     LABEL = "Journey!? Wow... u"
 
     print("Input : \n", SENTENCE)
@@ -86,12 +91,14 @@ if __name__ == "__main__":
     SENTENCE = vectorize_string(SENTENCE, alphanumeric_only=ALPHANUM_ONLY,
                                 sentence_size=SENTENCE_SIZE,
                                 word_size=WORD_SIZE,
+                                split_punctuation=SPLIT_PUNCTUATION,
                                 fill_with=FILL_WITH
                                 )
 
     LABEL = vectorize_string(LABEL, alphanumeric_only=ALPHANUM_ONLY,
                              sentence_size=SENTENCE_SIZE,
                              word_size=WORD_SIZE,
+                             split_punctuation=SPLIT_PUNCTUATION,
                              fill_with=FILL_WITH
                              )
     print("Label :")
