@@ -6,26 +6,18 @@ import string
 from nltk.tokenize import WordPunctTokenizer
 
 
-def alphanumeric(text, lower=True):
-    new_text = text
-    if lower:
-        new_text = new_text.lower()
-    new_text = re.sub(r'\W+', '', new_text)
-
-    return new_text
-
-
-def get_description(word, descriptions, word_size, fill_with):
-    search = descriptions.iloc[:, 0] == word
+def get_description(word, dictionary, word_size, fill_with, not_seen):
+    search = dictionary.iloc[:, 0] == word
 
     if np.sum(search) > 0:
-        return descriptions[search].iloc[0, 1:].to_numpy()
+        return dictionary[search].iloc[0, 1:].to_numpy()
     else:
-        print(word, ": not seen...")
+        if not_seen:
+            print(word, ": not seen...")
         return np.ones(word_size) * fill_with
 
 
-def one_description(tweet, descriptions, sentence_size=15, word_size=50, alphanumeric_only=True, fill_with=0):
+def one_description(tweet, dictionary, sentence_size=15, word_size=50, fill_with=0, not_seen=False):
     # Initialise output
     output = np.ones((sentence_size, word_size)) * fill_with
 
@@ -35,45 +27,45 @@ def one_description(tweet, descriptions, sentence_size=15, word_size=50, alphanu
     idx_word = 0
 
     while idx_word < nb_words and idx_word < sentence_size:
-        output[idx_word] = get_description(list_words[idx_word], descriptions, word_size, fill_with)
+        output[idx_word] = get_description(list_words[idx_word], dictionary, word_size, fill_with, not_seen)
         idx_word += 1
 
     return list_words, np.reshape(output, -1)
 
 
-def descriptor(tweets, descriptions, sentence_size=15, word_size=50, alphanumeric_only=True, fill_with=0):
+def descriptor(tweets, dictionary, sentence_size=15, word_size=50, fill_with=0, not_seen=False):
     nb_tweets = len(tweets)
     # Initialize sets
-    x_string_train = []
-    x_train = np.ones((nb_tweets, sentence_size * word_size)) * fill_with
+    x_string = []
+    x_scalar = np.ones((nb_tweets, sentence_size * word_size)) * fill_with
 
     # Describe each tweet
     for idx_tweet in range(nb_tweets):
-        description = one_description(tweets[idx_tweet], descriptions, sentence_size, word_size, alphanumeric_only, fill_with)
-        x_string_train.append(description[0])
-        x_train[idx_tweet] = description[1]
+        description = one_description(tweets[idx_tweet], dictionary, sentence_size, word_size, fill_with, not_seen)
+        x_string.append(description[0])
+        x_scalar[idx_tweet] = description[1]
 
-    return x_string_train, x_train
+    return x_string, x_scalar
 
 
 if __name__ == "__main__":
     # -- Get the data -- #
-    PATH_SAMPLE = Path("../../../data/samples/sample_100_train.csv")
+    PATH_SAMPLE = Path("../../../data/samples/sample_10_train.csv")
     SAMPLE = pd.read_csv(PATH_SAMPLE)
 
     # -- Get the descriptor -- #
-    PATH_DESCRIPTOR = Path("../../../data/glove_descriptor/glove.6B.50d.txt")
-    DESCRIPTIONS = pd.read_csv(PATH_DESCRIPTOR, sep=" ", header=None)
+    PATH_DICTIONARY = Path("../../../data/glove_descriptor/glove.6B.50d.txt")
+    DICTIONARY = pd.read_csv(PATH_DICTIONARY, sep=" ", header=None)
 
     # -- Parameters -- #
     WORD_SIZE = 50  # 50 or 100 or 200 or 300
     SENTENCE_SIZE = 20  # What ever
-    FILL_WITH = 0  # If a word is not in the descriptions, [0, ..., 0] will describe it.
+    FILL_WITH = 0  # If a word is not in the dictionary, [0, ..., 0] will describe it.
 
-    (X_STRING_TRAIN, X_TRAIN) = descriptor(SAMPLE["text"], DESCRIPTIONS, SENTENCE_SIZE, WORD_SIZE, FILL_WITH)
+    (TWEET_STRING, TWEET_SCALAR) = descriptor(SAMPLE["text"], DICTIONARY, SENTENCE_SIZE, WORD_SIZE, FILL_WITH, not_seen=False)
 
-    # (X_STRING_TRAIN, X_TRAIN) = one_description(SAMPLE["text"][0], DESCRIPTIONS, SENTENCE_SIZE, WORD_SIZE, alphanumeric_only=False)
-    print(X_STRING_TRAIN)
-    print("X_STRING_TRAIN.shape", len(X_STRING_TRAIN))
-    print(X_TRAIN)
-    print("X_TRAIN.shape", X_TRAIN.shape)
+    # (TWEET_STRING, TWEET_SCALAR) = one_description(SAMPLE["text"][0], DICTIONARY, SENTENCE_SIZE, WORD_SIZE)
+    print(TWEET_STRING)
+    print("len(TWEET_STRING)", len(TWEET_STRING))
+    print(TWEET_SCALAR)
+    print("TWEET_SCALAR.shape", TWEET_SCALAR.shape)
