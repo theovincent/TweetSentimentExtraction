@@ -1,12 +1,12 @@
 from pathlib import Path
 import numpy as np
 import pandas as pd
-import re
-import string
 from nltk.tokenize import WordPunctTokenizer
 
 
 def get_description(word, dictionary, word_size, fill_with, not_seen):
+    # if word == ":
+    word = word.lower()
     search = dictionary.iloc[:, 0] == word
 
     if np.sum(search) > 0:
@@ -17,7 +17,7 @@ def get_description(word, dictionary, word_size, fill_with, not_seen):
         return np.ones(word_size) * fill_with
 
 
-def one_description(tweet, dictionary, sentence_size=15, word_size=50, fill_with=0, not_seen=False):
+def one_description(tweet, dictionary, sentence_size, word_size, fill_with, not_seen):
     # Initialise output
     output = np.ones((sentence_size, word_size)) * fill_with
 
@@ -33,17 +33,30 @@ def one_description(tweet, dictionary, sentence_size=15, word_size=50, fill_with
     return list_words, np.reshape(output, -1)
 
 
-def descriptor(tweets, dictionary, sentence_size=15, word_size=50, fill_with=0, not_seen=False):
+def descriptor(samples, dictionary, options, not_seen=False):
+    # Get the options
+    (word_size, sentence_size, fill_with, sentiment_weight) = options
+
+    # Get the tweets and the sentiments
+    tweets = samples[:, 1]
+    sentiment = samples[:, 3]
+
     nb_tweets = len(tweets)
     # Initialize sets
     x_string = []
-    x_scalar = np.ones((nb_tweets, sentence_size * word_size)) * fill_with
+    x_scalar = np.ones((nb_tweets, sentence_size * word_size + 1)) * fill_with
 
     # Describe each tweet
     for idx_tweet in range(nb_tweets):
+        # Describe the tweet
         description = one_description(tweets[idx_tweet], dictionary, sentence_size, word_size, fill_with, not_seen)
+
+        # Add the sentiment
+        sentiment_description = np.concatenate((description[1], np.array([sentiment[idx_tweet] * sentiment_weight])))
+
+        # Update lists
         x_string.append(description[0])
-        x_scalar[idx_tweet] = description[1]
+        x_scalar[idx_tweet] = sentiment_description
 
     return x_string, x_scalar
 
@@ -51,7 +64,7 @@ def descriptor(tweets, dictionary, sentence_size=15, word_size=50, fill_with=0, 
 if __name__ == "__main__":
     # -- Get the data -- #
     PATH_SAMPLE = Path("../../../data/samples/sample_10_train.csv")
-    SAMPLE = pd.read_csv(PATH_SAMPLE)
+    SAMPLE = pd.read_csv(PATH_SAMPLE).to_numpy()
 
     # -- Get the descriptor -- #
     PATH_DICTIONARY = Path("../../../data/glove_descriptor/glove.6B.50d.txt")
@@ -61,10 +74,12 @@ if __name__ == "__main__":
     WORD_SIZE = 50  # 50 or 100 or 200 or 300
     SENTENCE_SIZE = 20  # What ever
     FILL_WITH = 0  # If a word is not in the dictionary, [0, ..., 0] will describe it.
+    SENTIMENT_WEIGHT = 2  # Multiply the sentiment by a factor
+    OPTIONS = [WORD_SIZE, SENTENCE_SIZE, FILL_WITH, SENTIMENT_WEIGHT]
 
-    (TWEET_STRING, TWEET_SCALAR) = descriptor(SAMPLE["text"], DICTIONARY, SENTENCE_SIZE, WORD_SIZE, FILL_WITH, not_seen=False)
+    (TWEET_STRING, TWEET_SCALAR) = descriptor(SAMPLE, DICTIONARY, OPTIONS, not_seen=False)
 
-    # (TWEET_STRING, TWEET_SCALAR) = one_description(SAMPLE["text"][0], DICTIONARY, SENTENCE_SIZE, WORD_SIZE)
+    # (TWEET_STRING, TWEET_SCALAR) = one_description(SAMPLE[0, 1], DICTIONARY, SENTENCE_SIZE, WORD_SIZE, FILL_WITH, True)
     print(TWEET_STRING)
     print("len(TWEET_STRING)", len(TWEET_STRING))
     print(TWEET_SCALAR)
