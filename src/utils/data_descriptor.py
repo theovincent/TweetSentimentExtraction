@@ -71,7 +71,7 @@ def convert_label(sentence, label, sentence_size):
     new_label = np.full(len(sentence), False)
     for i in range(len(label)):
         new_label += (sentence == label[i])
-    new_label = np.concatenate((1*new_label, np.zeros(sentence_size - len(sentence))))
+    new_label = np.concatenate((1*new_label, np.zeros(max(0,sentence_size - len(sentence)))))
     return new_label
 
 
