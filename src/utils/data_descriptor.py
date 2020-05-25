@@ -67,18 +67,34 @@ def descriptor(list_words, alphanumeric_only=True):
     return np.array(outputs)
 
 
-def convert_labels(sentence, label):
+def convert_label(sentence, label, sentence_size):
     new_label = np.full(len(sentence), False)
     for i in range(len(label)):
         new_label += (sentence == label[i])
-    return 1*new_label
+    new_label = np.concatenate((1*new_label, np.zeros(sentence_size - len(sentence))))
+    return new_label
+
+
+def convert_labels(data, sentence_size, split_punctuation=True):
+    y = []
+    for tweet in data:
+        if split_punctuation:
+            sentence = WordPunctTokenizer().tokenize(tweet[1])
+            label = WordPunctTokenizer().tokenize(tweet[2])
+        else:
+            sentence = tweet[1].split()
+            label = tweet[2].split()
+
+        label = convert_label(np.array(sentence), np.array(label), sentence_size)
+        y.append(label)
+    return np.array(y)
 
 
 if __name__ == "__main__":
 
     ALPHANUM_ONLY = False
     WORD_SIZE = 12
-    SENTENCE_SIZE = 15
+    SENTENCE_SIZE = 25
     FILL_WITH = "$"
     SPLIT_PUNCTUATION = False
 
@@ -87,6 +103,9 @@ if __name__ == "__main__":
     LABEL = "Journey!? Wow... u"
 
     print("Input : \n", SENTENCE)
+
+    print("Label :")
+    print(convert_labels([("", SENTENCE, LABEL, "")], SENTENCE_SIZE))
 
     SENTENCE = vectorize_string(SENTENCE, alphanumeric_only=ALPHANUM_ONLY,
                                 sentence_size=SENTENCE_SIZE,
@@ -101,8 +120,7 @@ if __name__ == "__main__":
                              split_punctuation=SPLIT_PUNCTUATION,
                              fill_with=FILL_WITH
                              )
-    print("Label :")
-    print(convert_labels(SENTENCE, LABEL))
+
 
     print("In a fixed size matrix :")
     print(SENTENCE)

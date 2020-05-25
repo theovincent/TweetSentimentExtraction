@@ -4,7 +4,7 @@ import numpy as np
 
 from utils.data_descriptor import descriptor
 from utils.data_descriptor import vectorize_string
-from utils.data_descriptor import convert_labels
+from utils.data_descriptor import convert_label
 
 
 def load_data(data, word_size, sentence_size, fill_with, split_punctuation=False, alphanum_only=False):
@@ -30,17 +30,7 @@ def load_data(data, word_size, sentence_size, fill_with, split_punctuation=False
                                     fill_with=fill_with
                                     )
 
-        label = vectorize_string(tweet[2], alphanumeric_only=alphanum_only,
-                                 sentence_size=sentence_size,
-                                 word_size=word_size,
-                                 split_punctuation=split_punctuation,
-                                 fill_with=fill_with
-                                 )
-
         x_string.append(sentence)
-
-        label = convert_labels(sentence, label)
-        y.append(label)
 
         sentence = descriptor(sentence, alphanumeric_only=alphanum_only).flatten()
         x = np.concatenate((sentence, [tweet[3] * feeling_weight]))
@@ -48,9 +38,9 @@ def load_data(data, word_size, sentence_size, fill_with, split_punctuation=False
 
     x_scalar = np.array(x_scalar)
     x_string = np.array(x_string)
-    y = np.array(y)
 
-    return x_string, x_scalar, y
+    return x_string, x_scalar
+
 
 
 if __name__ == '__main__':
