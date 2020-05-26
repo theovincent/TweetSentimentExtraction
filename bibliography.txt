@@ -20,6 +20,9 @@ https://medium.com/huggingface/state-of-the-art-neural-coreference-resolution-fo
 
 https://huggingface.co/coref/ (demo)
 
+To tokenize tweets:
+https://towardsdatascience.com/an-introduction-to-tweettokenizer-for-processing-tweets-9879389f8fe7
+
 
 To tune the data:
 https://spacy.io/usage/training#section-ner
