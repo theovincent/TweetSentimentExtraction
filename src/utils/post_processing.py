@@ -19,7 +19,7 @@ def add_spaces(original_string, original_sentence):
         if current_index < len(original_string) and original_string[current_index] == " ":
             spaces[word_count] = True
 
-            while original_string[current_index] == " ":
+            while current_index < len(original_string) and original_string[current_index] == " ":
                 current_index += 1
 
     return spaces
@@ -27,23 +27,6 @@ def add_spaces(original_string, original_sentence):
 
 def filter_character(string, character):
     return string.replace(character, "")
-
-
-# def pred_sentence_to_string(original_string, original_sentence, pred_sentence):
-#     spaces = add_spaces(original_string, original_sentence)
-#
-#     result = ""
-#     for i in range(len(sentence)):
-#         word = sentence[i]
-#
-#         filtered_word = filter_character(word, "$")
-#         if len(filtered_word) != 0:
-#             result += filtered_word
-#
-#             if spaces[i]:
-#                 result += " "
-#
-#     return result
 
 
 def pred_to_string(original_string, original_sentence, prediction):
