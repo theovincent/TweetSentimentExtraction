@@ -13,7 +13,7 @@ if __name__ == "__main__":
 
     # -- Get the data -- #
     PATH_SAMPLE = Path("../../data/samples/sample_10_train.csv")
-    SAMPLE = np.array([pd.read_csv(PATH_SAMPLE).to_numpy()[0]])
+    SAMPLE = pd.read_csv(PATH_SAMPLE).to_numpy()
 
     # -- Get the descriptor -- #
     PATH_DICTIONARY = Path("../../data/glove_descriptor/glove.6B.50d.txt")
@@ -30,8 +30,8 @@ if __name__ == "__main__":
     OPTIONS = [WORD_SIZE, SENTENCE_SIZE, FILL_WITH, SENTIMENT_WEIGHT]
 
     (TWEET_STRING, TWEET_SCALAR) = descriptor(SAMPLE, DICTIONARY, ADDITIONAL_DIC, OPTIONS, not_seen=False)
-    print
 
+    standardize(TWEET_SCALAR)
     print(TWEET_STRING)
     print("len(TWEET_STRING)", len(TWEET_STRING))
     print(TWEET_SCALAR)
