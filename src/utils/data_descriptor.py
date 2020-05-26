@@ -68,10 +68,20 @@ def descriptor(list_words, alphanumeric_only=True):
 
 
 def convert_label(sentence, label, sentence_size):
-    new_label = np.full(len(sentence), False)
-    for i in range(len(label)):
-        new_label += (sentence == label[i])
-    new_label = np.concatenate((1*new_label, np.zeros(sentence_size - len(sentence))))
+    new_label = np.full(len(sentence), 0)
+    n = len(label)
+    possibles = np.where(sentence == label[0])[0]
+
+    sol = 0
+    for p in possibles:
+        check = sentence[p: p + n]
+        if np.all(check == label):
+            sol = p
+            break
+
+    new_label[sol: sol + n] = 1
+    new_label = np.concatenate((new_label, np.zeros(max(0, sentence_size - len(sentence)))))
+
     return new_label
 
 
@@ -98,9 +108,9 @@ if __name__ == "__main__":
     FILL_WITH = "$"
     SPLIT_PUNCTUATION = False
 
-    SENTENCE = "Journey!? Wow... u just became cooler.  hehe... (is that possible!?)"
+    SENTENCE = "Journey!? Wow... u just became u cooler.  hehe... (is that possible!?)"
 
-    LABEL = "Journey!? Wow... u"
+    LABEL = "!? Wow... u"
 
     print("Input : \n", SENTENCE)
 
@@ -120,7 +130,6 @@ if __name__ == "__main__":
                              split_punctuation=SPLIT_PUNCTUATION,
                              fill_with=FILL_WITH
                              )
-
 
     print("In a fixed size matrix :")
     print(SENTENCE)
