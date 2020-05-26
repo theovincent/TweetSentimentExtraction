@@ -43,3 +43,10 @@ def pred_to_string(original_string, original_sentence, prediction):
                 result += " "
 
     return result
+
+
+def preds_to_strings(original_strings, original_sentences, predictions):
+    results = np.zeros(len(predictions), dtype=object)
+    for i in range(len(predictions)):
+        results[i] = pred_to_string(original_strings[i], original_sentences[i], predictions[i])
+    return results

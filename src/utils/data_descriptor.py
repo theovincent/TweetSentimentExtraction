@@ -86,8 +86,11 @@ def convert_label(sentence, label, sentence_size):
 
 
 def convert_labels(data, sentence_size, split_punctuation=True):
-    y = []
+    y = np.zeros((len(data), sentence_size))
+
+    i = -1
     for tweet in data:
+        i += 1
         if split_punctuation:
             sentence = WordPunctTokenizer().tokenize(tweet[1])
             label = WordPunctTokenizer().tokenize(tweet[2])
@@ -96,7 +99,8 @@ def convert_labels(data, sentence_size, split_punctuation=True):
             label = tweet[2].split()
 
         label = convert_label(np.array(sentence), np.array(label), sentence_size)
-        y.append(label)
+
+        y[i] = label
     return np.array(y)
 
 

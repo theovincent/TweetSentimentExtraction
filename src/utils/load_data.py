@@ -7,7 +7,7 @@ from utils.data_descriptor import vectorize_string
 from utils.data_descriptor import convert_label
 
 
-def load_data(data, word_size, sentence_size, fill_with, split_punctuation=False, alphanum_only=False):
+def load_data(data, word_size, sentence_size, fill_with, split_punctuation=False, alphanum_only=False, feeling_weight=1):
 
     # list of the tweets, at the right shape, with "$" to fill
     x_string = []
@@ -20,7 +20,6 @@ def load_data(data, word_size, sentence_size, fill_with, split_punctuation=False
     y = []
 
     # to repeat the feeling several times and then put a weight on the feeling
-    feeling_weight = 1
 
     for tweet in data:
         sentence = vectorize_string(tweet[1], alphanumeric_only=alphanum_only,
@@ -40,7 +39,6 @@ def load_data(data, word_size, sentence_size, fill_with, split_punctuation=False
     x_string = np.array(x_string)
 
     return x_string, x_scalar
-
 
 
 if __name__ == '__main__':
