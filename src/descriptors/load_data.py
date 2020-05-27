@@ -2,9 +2,9 @@ import pandas as pd
 from pathlib import Path
 import numpy as np
 
-from utils.data_descriptor import descriptor
-from utils.data_descriptor import vectorize_string
-from utils.data_descriptor import convert_label
+from descriptors.data_descriptor import descriptor
+from descriptors.data_descriptor import vectorize_string
+from descriptors.data_descriptor import convert_label
 
 
 def load_data(data, word_size, sentence_size, fill_with, split_punctuation=False, alphanum_only=False, feeling_weight=1):
