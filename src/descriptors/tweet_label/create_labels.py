@@ -5,7 +5,8 @@ from nltk.tokenize import TweetTokenizer
 
 
 def convert_label(sentence, label, sentence_size):
-    new_label = np.full(len(sentence), 0)
+    new_label = np.zeros(sentence_size)
+
     n = len(label)
     possibles = np.where(sentence == label[0])[0]
 
@@ -17,39 +18,29 @@ def convert_label(sentence, label, sentence_size):
             break
 
     new_label[sol: sol + n] = 1
-    new_label = np.concatenate((new_label, np.zeros(max(0, sentence_size - len(sentence)))))
-
+    # new_label = np.concatenate((new_label, np.zeros(max(0, sentence_size - len(sentence)))))
     return new_label
 
 
-def create_labels(tweet_string, tweet_string_label):
-    y = np.zeros((len(data), sentence_size))
+def create_labels(x_sentence, y_string, sentence_size):
+    """Returns : y : array where each element is an array of size SENTENCE_SIZE of 0 and 1"""
 
-    tokenizer = TweetTokenizer(strip_handles=True)
+    n = len(x_sentence)
+    y = np.zeros((n, sentence_size))
 
-    i = -1
-    for tweet in data:
-        i += 1
-        if split_punctuation:
-            sentence = tokenizer.tokenize(tweet[1])
-            label = tokenizer.tokenize(tweet[2])
-        else:
-            sentence = tweet[1].split()
-            label = tweet[2].split()
+    # tokenizer = TweetTokenizer(strip_handles=True)
 
-        label = convert_label(np.array(sentence), np.array(label), sentence_size)
-
+    for i in range(n):
+        label = convert_label(np.array(x_sentence[i]), np.array(y_string[i]), sentence_size)
         y[i] = label
     return np.array(y)
 
 
 if __name__ == "__main__":
-    # -- Get the data -- #
-    PATH_SAMPLE = Path("../../../data/samples/sample_10_train.csv")
-    SAMPLE = pd.read_csv(PATH_SAMPLE).to_numpy()
+    EX = ["i", "feel", "really", "bored", "."]
+    EX_LABEL = ["bored", "."]
 
-    IDX = 9
-
-    print(SAMPLE[IDX])
+    print(EX)
+    print(EX_LABEL)
     print()
-    print(create_labes([SAMPLE[IDX]], 50))
+    print(create_labels([EX], [EX_LABEL], 50))

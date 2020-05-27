@@ -24,21 +24,22 @@ def alphanumeric(text, lower=True):
     return new_text
 
 
-def vectorize_string(text, sentence_size=15, word_size=12,
+"""
+def vectorizee_string(text, sentence_size=15, word_size=12,
                      split_punctuation=False, alphanumeric_only=True, fill_with="$"):
     if split_punctuation:
         list_words = WordPunctTokenizer().tokenize(text)
     else:
         list_words = text.split()
 
-    if alphanumeric_only:
-        to_delete = []
-        for i in range(len(list_words)):
-            list_words[i] = alphanumeric(list_words[i])
-            if list_words[i] == "":
-                to_delete.append(i)
-        list_words = np.delete(list_words, to_delete)
-        print("alphanumeric only \n", list_words)
+    # if alphanumeric_only:
+    #     to_delete = []
+    #     for i in range(len(list_words)):
+    #         list_words[i] = alphanumeric(list_words[i])
+    #         if list_words[i] == "":
+    #             to_delete.append(i)
+    #     list_words = np.delete(list_words, to_delete)
+    #     print("alphanumeric only \n", list_words)
 
     filled_text = np.full(sentence_size, fill_with * word_size)
     for i in range(min(sentence_size, len(list_words))):
@@ -49,10 +50,25 @@ def vectorize_string(text, sentence_size=15, word_size=12,
             filled_text[i] = list_words[i][:word_size]
 
     return filled_text
+"""
 
 
-def descriptor(list_words, alphanumeric_only=True):
-    inputs = list_words
+def vectorize_string(sentence, sentence_size, word_size, fill_with="$"):
+
+    filled_text = np.full(sentence_size, fill_with * word_size)
+
+    for i in range(min(sentence_size, len(sentence))):
+        s = len(sentence[i])
+        if s < word_size:
+            filled_text[i] = sentence[i] + filled_text[i]
+        else:
+            filled_text[i] = sentence[i][:word_size]
+
+    return filled_text
+
+
+def descriptor(x_sentence, alphanumeric_only=False):
+    inputs = x_sentence
     outputs = []
 
     for word in inputs:
@@ -66,7 +82,7 @@ def descriptor(list_words, alphanumeric_only=True):
 
     return np.array(outputs)
 
-
+"""
 def convert_label(sentence, label, sentence_size):
     new_label = np.full(len(sentence), 0)
     n = len(label)
@@ -102,7 +118,7 @@ def convert_labels(data, sentence_size, split_punctuation=True):
 
         y[i] = label
     return np.array(y)
-
+"""
 
 if __name__ == "__main__":
 
@@ -113,14 +129,21 @@ if __name__ == "__main__":
     SPLIT_PUNCTUATION = False
 
     SENTENCE = "Journey!? Wow... u just became u cooler.  hehe... (is that possible!?)"
-
     LABEL = "!? Wow... u"
 
     print("Input : \n", SENTENCE)
 
-    print("Label :")
-    print(convert_labels([("", SENTENCE, LABEL, "")], SENTENCE_SIZE))
+    EX = ["i", "feel", "really", "bored", "."]
+    EX_LABEL = ["bored", "."]
+    EX_VECT = vectorize_string(EX, SENTENCE_SIZE, WORD_SIZE, FILL_WITH)
+    LABEL_VECT = vectorize_string(EX_LABEL, SENTENCE_SIZE, WORD_SIZE, FILL_WITH)
+    print(EX_VECT)
+    print(LABEL_VECT)
 
+    # print("Label :")
+    # print(convert_labels([("", SENTENCE, LABEL, "")], SENTENCE_SIZE))
+
+"""
     SENTENCE = vectorize_string(SENTENCE, alphanumeric_only=ALPHANUM_ONLY,
                                 sentence_size=SENTENCE_SIZE,
                                 word_size=WORD_SIZE,
@@ -141,3 +164,4 @@ if __name__ == "__main__":
     SENTENCE = descriptor(SENTENCE, alphanumeric_only=ALPHANUM_ONLY)
     print("Output :")
     print(SENTENCE)
+"""
