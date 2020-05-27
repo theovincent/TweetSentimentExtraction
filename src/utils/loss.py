@@ -10,4 +10,4 @@ def mean_jaccard(ground_truths, predicted_strings):
     for i in range(len(predicted_strings)):
         avg += jaccard(predicted_strings[i], ground_truths[i])
 
-    return avg
+    return avg / len(predicted_strings)
