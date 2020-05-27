@@ -9,14 +9,14 @@ def standardize(descriptions):
 
 
 if __name__ == "__main__":
-    from src.descriptors.glove_descriptor.glove_descriptor import descriptor
+    from src.descriptors.descriptor_glove.descriptor_glove import tweet_scalar_glove
 
     # -- Get the data -- #
     PATH_SAMPLE = Path("../../data/samples/sample_10_train.csv")
     SAMPLE = pd.read_csv(PATH_SAMPLE).to_numpy()
 
-    # -- Get the descriptor -- #
-    PATH_DICTIONARY = Path("../../data/glove_descriptor/glove.6B.50d.txt")
+    # -- Get the tweet_scalar_glove -- #
+    PATH_DICTIONARY = Path("../../data/descriptor_glove/glove.6B.50d.txt")
     DICTIONARY = pd.read_csv(PATH_DICTIONARY, sep=" ", header=None)
 
     # -- Additional dictionary -- #
@@ -29,7 +29,7 @@ if __name__ == "__main__":
     SENTIMENT_WEIGHT = 2  # Multiply the sentiment by a factor
     OPTIONS = [WORD_SIZE, SENTENCE_SIZE, FILL_WITH, SENTIMENT_WEIGHT]
 
-    (TWEET_STRING, TWEET_SCALAR) = descriptor(SAMPLE, DICTIONARY, ADDITIONAL_DIC, OPTIONS, not_seen=False)
+    (TWEET_STRING, TWEET_SCALAR) = tweet_scalar_glove(SAMPLE, DICTIONARY, ADDITIONAL_DIC, OPTIONS, not_seen=False)
 
     standardize(TWEET_SCALAR)
     print(TWEET_STRING)

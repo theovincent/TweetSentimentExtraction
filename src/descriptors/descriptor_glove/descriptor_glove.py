@@ -37,7 +37,7 @@ def one_description(tweet, tokenizer, dictionary, additional_dic, sentence_size,
     return list_words, np.reshape(output, -1)
 
 
-def descriptor(samples, dictionary, additional_dic, options, not_seen=False):
+def tweet_scalar_glove(tweet_string, sentiments, dictionary, additional_dic, options):
     # Get the options
     (word_size, sentence_size, fill_with, sentiment_weight) = options
 
@@ -47,8 +47,8 @@ def descriptor(samples, dictionary, additional_dic, options, not_seen=False):
 
     nb_tweets = len(tweets)
     # Initialize sets
-    x_string = []
-    x_scalar = np.ones((nb_tweets, sentence_size * word_size + 1)) * fill_with
+    tweet_string = []
+    tweet_scalar = np.ones((nb_tweets, sentence_size * word_size + 1)) * fill_with
 
     # Initialize tokenizer
     tokenizer = TweetTokenizer(strip_handles=True)
@@ -62,10 +62,10 @@ def descriptor(samples, dictionary, additional_dic, options, not_seen=False):
         sentiment_description = np.concatenate((description[1], np.array([sentiment[idx_tweet] * sentiment_weight])))
 
         # Update lists
-        x_string.append(description[0])
-        x_scalar[idx_tweet] = sentiment_description
+        tweet_string.append(description[0])
+        tweet_scalar[idx_tweet] = sentiment_description
 
-    return x_string, x_scalar
+    return np.array(tweet_string, dtype=str), tweet_scalar
 
 
 if __name__ == "__main__":
@@ -73,8 +73,8 @@ if __name__ == "__main__":
     PATH_SAMPLE = Path("../../../data/samples/sample_10_train.csv")
     SAMPLE = pd.read_csv(PATH_SAMPLE).to_numpy()
 
-    # -- Get the descriptor -- #
-    PATH_DICTIONARY = Path("../../../data/glove_descriptor/glove.6B.50d.txt")
+    # -- Get the tweet_scalar_glove -- #
+    PATH_DICTIONARY = Path("../../../data/descriptor_glove/glove.6B.50d.txt")
     DICTIONARY = pd.read_csv(PATH_DICTIONARY, sep=" ", header=None)
 
     # -- Additional dictionary -- #
@@ -87,9 +87,8 @@ if __name__ == "__main__":
     SENTIMENT_WEIGHT = 2  # Multiply the sentiment by a factor
     OPTIONS = [WORD_SIZE, SENTENCE_SIZE, FILL_WITH, SENTIMENT_WEIGHT]
 
-    (TWEET_STRING, TWEET_SCALAR) = descriptor(SAMPLE, DICTIONARY, ADDITIONAL_DIC, OPTIONS, not_seen=False)
+    (TWEET_STRING, TWEET_SCALAR) = tweet_scalar_glove(SAMPLE, DICTIONARY, ADDITIONAL_DIC, OPTIONS, not_seen=False)
 
-    # (TWEET_STRING, TWEET_SCALAR) = one_description(SAMPLE[0, 1], DICTIONARY, SENTENCE_SIZE, WORD_SIZE, FILL_WITH, True)
     print(TWEET_STRING)
     print("len(TWEET_STRING)", len(TWEET_STRING))
     print(TWEET_SCALAR)

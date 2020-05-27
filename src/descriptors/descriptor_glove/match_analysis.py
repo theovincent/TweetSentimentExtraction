@@ -44,8 +44,8 @@ if __name__ == "__main__":
     PATH_SAMPLE = Path("../../../data/samples/sample_1000_train.csv")
     SAMPLE = pd.read_csv(PATH_SAMPLE).to_numpy()
 
-    # -- Get the descriptor -- #
-    PATH_DICTIONARY = Path("../../../data/glove_descriptor/glove.6B.50d.txt")
+    # -- Get the tweet_scalar_glove -- #
+    PATH_DICTIONARY = Path("../../../data/descriptor_glove/glove.6B.50d.txt")
     DICTIONARY = pd.read_csv(PATH_DICTIONARY, sep=" ", header=None)
 
     ADDITIONAL_DIC = {"..": "...", "<3": "love"}
