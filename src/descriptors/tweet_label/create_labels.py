@@ -5,6 +5,7 @@ from nltk.tokenize import TweetTokenizer
 
 
 def convert_label(sentence, label, sentence_size):
+    """ sentence and label are tokenized array"""
     new_label = np.zeros(sentence_size)
 
     n = len(label)
