@@ -3,16 +3,16 @@ import numpy as np
 import pandas as pd
 
 
-def create_strings(tweet_original, tokenizer):
-    nb_tweets = len(tweet_original)
+def create_strings(tweet_originals, tokenizer):
+    nb_tweets = len(tweet_originals)
 
     # Initialize strings
-    tweet_string = ["tweet"] * nb_tweets
+    tweet_strings = ["tweet"] * nb_tweets
 
     for idx_tweet in range(nb_tweets):
-        tweet_string[idx_tweet] = tokenizer.tokenize(tweet_original[idx_tweet])
+        tweet_strings[idx_tweet] = tokenizer.tokenize(tweet_originals[idx_tweet])
 
-    return tweet_string
+    return tweet_strings
 
 
 if __name__ == "__main__":
@@ -23,9 +23,9 @@ if __name__ == "__main__":
     SAMPLE = pd.read_csv(PATH_SAMPLE).to_numpy()
 
     # -- Get the original tweets -- #
-    TWEET_ORIGINAL = SAMPLE[:, 1]
+    TWEET_ORIGINALS = SAMPLE[:, 1]
 
     # -- Define the tokenizer -- #
     TOKENIZER = Tokenizer()
 
-    print(create_strings(TWEET_ORIGINAL, TOKENIZER))
+    print(create_strings(TWEET_ORIGINALS, TOKENIZER))
