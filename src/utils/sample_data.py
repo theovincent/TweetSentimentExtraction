@@ -55,9 +55,9 @@ class SampleData:
 if __name__ == "__main__":
     CSV_NAME = "train.csv"
     CSV_PATH = Path("../../data/") / CSV_NAME
-    PERCENTAGE = [0.333, 0.333]
-    NB_SAMPLES = 100
+    PERCENTAGE = [0.3, 0.3]
+    NB_SAMPLES = 10
 
-    SAMPLE_DATA = SampleData(CSV_PATH, nb_samples=NB_SAMPLES, percentage=PERCENTAGE, save=False)
+    SAMPLE_DATA = SampleData(CSV_PATH, nb_samples=NB_SAMPLES, percentage=PERCENTAGE, save=True)
 
     print(len(SAMPLE_DATA.sample_data))
