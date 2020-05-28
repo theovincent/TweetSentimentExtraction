@@ -38,7 +38,8 @@ def tweet_scalar_glove(tweet_strings, sentiments, dictionary, additional_dic, op
     nb_tweets = len(tweet_strings)
 
     # Get the options
-    (word_size, sentence_size, fill_with, sentiment_weight) = options
+    (word_size, fill_with, sentiment_weight) = options
+    sentence_size = len(tweet_strings[0])
 
     # Initialize tweet scalar
     tweet_scalar = np.ones((nb_tweets, sentence_size * word_size + 1)) * fill_with  # +1 for the sentiment
@@ -68,10 +69,11 @@ if __name__ == "__main__":
 
     # -- Parameters -- #
     WORD_SIZE = 50  # 50 or 100 or 200 or 300
-    SENTENCE_SIZE = 20  # What ever
     FILL_WITH = 0  # If a word is not in the dictionary, [0, ..., 0] will describe it.
     SENTIMENT_WEIGHT = 2  # Multiply the sentiment by a factor
-    OPTIONS = [WORD_SIZE, SENTENCE_SIZE, FILL_WITH, SENTIMENT_WEIGHT]
+    OPTIONS = [WORD_SIZE, FILL_WITH, SENTIMENT_WEIGHT]
+
+    SENTENCE_SIZE = 2  # What ever
 
     # -- Get the original tweets -- #
     TWEET_ORIGINALS = SAMPLE[:, 1]
@@ -80,7 +82,7 @@ if __name__ == "__main__":
     from src.descriptors.tweet_string.create_strings import create_strings
     from src.descriptors.tokenizer.tokenizer import Tokenizer
     TOKENIZER = Tokenizer()
-    TWEET_STRINGS = create_strings(TWEET_ORIGINALS, TOKENIZER)
+    TWEET_STRINGS = create_strings(TWEET_ORIGINALS, TOKENIZER, SENTENCE_SIZE)
 
     # -- Get the tweet_scalar_glove -- #
     PATH_DICTIONARY = Path("../../../data/glove_descriptor/glove.6B.50d.txt")

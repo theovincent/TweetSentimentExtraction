@@ -3,14 +3,14 @@ import numpy as np
 import pandas as pd
 
 
-def create_strings(tweet_originals, tokenizer):
+def create_strings(tweet_originals, tokenizer, sentence_size):
     nb_tweets = len(tweet_originals)
 
     # Initialize strings
     tweet_strings = ["tweet"] * nb_tweets
 
     for idx_tweet in range(nb_tweets):
-        tweet_strings[idx_tweet] = list(map(np.str_, tokenizer.tokenize(tweet_originals[idx_tweet])))
+        tweet_strings[idx_tweet] = list(map(np.str_, tokenizer.tokenize(tweet_originals[idx_tweet], sentence_size)))
 
     return tweet_strings
 
@@ -28,4 +28,6 @@ if __name__ == "__main__":
     # -- Define the tokenizer -- #
     TOKENIZER = Tokenizer()
 
-    print(create_strings(TWEET_ORIGINALS, TOKENIZER))
+    SENTENCE_SIZE = 2
+
+    print(create_strings(TWEET_ORIGINALS, TOKENIZER, SENTENCE_SIZE))
