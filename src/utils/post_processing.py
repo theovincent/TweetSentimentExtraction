@@ -13,7 +13,7 @@ def add_spaces(original_string, original_sentence):
     for word in original_sentence:
         filtered_word = filter_character(word, "$")
 
-        current_index += len(filtered_word)
+        current_index += len(word)
         word_count += 1
 
         if current_index < len(original_string) and original_string[current_index] == " ":
@@ -34,8 +34,8 @@ def pred_to_string(original_string, original_sentence, prediction):
 
     result = ""
     for i in range(len(original_sentence)):
-        word = filter_character(original_sentence[i].copy(), "$")
-
+        # word = filter_character(original_sentence[i].copy(), "$")
+        word = original_sentence[i]
         if prediction[i]:
             result += word
 

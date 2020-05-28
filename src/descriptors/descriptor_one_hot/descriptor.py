@@ -7,8 +7,8 @@ def one_hot_representation(sentence, sentence_size, word_size, fill_with_ones=Fa
     inputs = sentence
     outputs = np.zeros((sentence_size, word_size, size))
 
-    for i, word in enumerate(inputs):
-        word = word.upper()
+    for i, word in enumerate(inputs[:sentence_size]):
+        word = word[:word_size].upper()
         output = []
 
         for character in word:
@@ -30,11 +30,18 @@ def one_hot_representation(sentence, sentence_size, word_size, fill_with_ones=Fa
     return outputs
 
 
-def descriptor_one_hot(x_sentence, sentence_size, word_size, fill_with_ones=False):
+def descriptor_one_hot(x_sentence, sentence_size, word_size,
+                       feelings=None, feeling_weight=1, fill_with_ones=False):
     x_one_hot = []
-    for sentence in x_sentence:
+    for i, sentence in enumerate(x_sentence):
         sentence_one_hot = one_hot_representation(sentence, sentence_size, word_size, fill_with_ones)
+        sentence_one_hot = sentence_one_hot.flatten()
+
+        if feelings is not None:
+            sentence_one_hot = np.concatenate((sentence_one_hot, [feelings[i] * feeling_weight]))
+
         x_one_hot.append(sentence_one_hot)
+
     return np.array(x_one_hot)
 
 
@@ -50,7 +57,11 @@ if __name__ == '__main__':
     EX2 = [["i", "feel", "really", "bored", "."],
            ["we", "are", "champions"]
            ]
-    EX2_ONE_HOT = descriptor_one_hot(EX2, 6, 10)
+
+    FEELINGS = [1, -1]
+    EX2_ONE_HOT = descriptor_one_hot(EX2, 6, 10, FEELINGS, 10)
 
     print(EX2_ONE_HOT.shape)
-    print(EX2_ONE_HOT[0, 2])
+
+    # print the feeling
+    print(EX2_ONE_HOT[0, -1])
