@@ -9,10 +9,6 @@ class Tokenizer:
         # Decomposition
         word_decompostion = self.tokenizer.tokenize(tweet)[: sentence_size]
 
-        """nb_word = len(word_decompostion)
-        if len(word_decompostion) < sentence_size:
-            word_decompostion.extend(["   "] * (sentence_size - nb_word))"""
-
         return word_decompostion
 
 

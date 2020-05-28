@@ -73,7 +73,7 @@ if __name__ == "__main__":
     SENTIMENT_WEIGHT = 2  # Multiply the sentiment by a factor
     OPTIONS = [WORD_SIZE, FILL_WITH, SENTIMENT_WEIGHT]
 
-    SENTENCE_SIZE = 2  # What ever
+    SENTENCE_SIZE = 50  # What ever
 
     # -- Get the original tweets -- #
     TWEET_ORIGINALS = SAMPLE[:, 1]
