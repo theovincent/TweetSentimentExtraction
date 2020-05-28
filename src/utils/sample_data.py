@@ -36,7 +36,6 @@ class SampleData:
         if save:
             if path_save is None:
                 path_save = Path("../../data/samples/sample_{}.csv".format(nb_samples))
-            pass
             self.sample_data.to_csv(path_save, index=False)
 
     def fill_small_data(self):
@@ -52,12 +51,42 @@ class SampleData:
         self.sample_data = self.sample_data.replace({'sentiment': mapping})
 
 
+def get_validation(path_csv, path_train, path_save):
+    # Get the csv and shuffle it
+    data = pd.read_csv(path_csv)
+    nb_tweets = len(data)
+
+    # Change the sentiment
+    mapping = {'positive': 1, 'neutral': 0, 'negative': -1}
+    data = data.replace({'sentiment': mapping})
+
+    # Get the train
+    data_train = pd.read_csv(path_train)
+
+    # Select the element that are not already selected in the training set
+    selection = []
+    for idx_tweet in range(nb_tweets):
+        if not data.iloc[idx_tweet, 0] in data_train.iloc[:, 0]:
+            selection.append(idx_tweet)
+
+    # Path to save
+    path_save_valid = path_save / "full_sample{}_validations.csv".format(len(selection))
+
+    # Save the validation set
+    # data.iloc[selection, :].to_csv(path_save_valid, index=False)
+
+
 if __name__ == "__main__":
     CSV_NAME = "train.csv"
     CSV_PATH = Path("../../data/") / CSV_NAME
     PERCENTAGE = [0.3, 0.3]
-    NB_SAMPLES = 10
+    NB_SAMPLES = 21984
 
-    SAMPLE_DATA = SampleData(CSV_PATH, nb_samples=NB_SAMPLES, percentage=PERCENTAGE, save=True)
+    # SAMPLE_DATA = SampleData(CSV_PATH, nb_samples=NB_SAMPLES, percentage=PERCENTAGE, save=True)
+    # print(len(SAMPLE_DATA.sample_data))
 
-    print(len(SAMPLE_DATA.sample_data))
+    PERCENTAGE_TRAIN = 0.8
+    PATH_SAVE = Path("../../data/samples")
+    print(PATH_SAVE.exists())
+    PATH_TRAIN = Path("../../data/samples/full_sample_21984_train.csv")
+    get_validation(CSV_PATH, PATH_TRAIN, PATH_SAVE)
