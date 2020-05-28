@@ -38,8 +38,7 @@ def tweet_scalar_glove(tweet_strings, sentiments, dictionary, additional_dic, op
     nb_tweets = len(tweet_strings)
 
     # Get the options
-    (word_size, fill_with, sentiment_weight) = options
-    sentence_size = len(tweet_strings[0])
+    (word_size, sentence_size, fill_with, sentiment_weight) = options
 
     # Initialize tweet scalar
     tweet_scalar = np.ones((nb_tweets, sentence_size * word_size + 1)) * fill_with  # +1 for the sentiment
@@ -71,9 +70,8 @@ if __name__ == "__main__":
     WORD_SIZE = 50  # 50 or 100 or 200 or 300
     FILL_WITH = 0  # If a word is not in the dictionary, [0, ..., 0] will describe it.
     SENTIMENT_WEIGHT = 2  # Multiply the sentiment by a factor
-    OPTIONS = [WORD_SIZE, FILL_WITH, SENTIMENT_WEIGHT]
-
-    SENTENCE_SIZE = 50  # What ever
+    SENTENCE_SIZE = 20  # What ever
+    OPTIONS = [WORD_SIZE, SENTENCE_SIZE, FILL_WITH, SENTIMENT_WEIGHT]
 
     # -- Get the original tweets -- #
     TWEET_ORIGINALS = SAMPLE[:, 1]

@@ -6,10 +6,7 @@ class Tokenizer:
         self.tokenizer = TweetTokenizer(strip_handles=strip_handles)
 
     def tokenize(self, tweet, sentence_size):
-        # Decomposition
-        word_decompostion = self.tokenizer.tokenize(tweet)[: sentence_size]
-
-        return word_decompostion
+        return self.tokenizer.tokenize(tweet)[: sentence_size]
 
 
 if __name__ == "__main__":
