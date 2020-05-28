@@ -10,7 +10,7 @@ def create_strings(tweet_originals, tokenizer):
     tweet_strings = ["tweet"] * nb_tweets
 
     for idx_tweet in range(nb_tweets):
-        tweet_strings[idx_tweet] = tokenizer.tokenize(tweet_originals[idx_tweet])
+        tweet_strings[idx_tweet] = list(map(np.str_, tokenizer.tokenize(tweet_originals[idx_tweet])))
 
     return tweet_strings
 
