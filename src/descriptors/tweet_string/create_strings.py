@@ -19,15 +19,15 @@ if __name__ == "__main__":
     from src.descriptors.tokenizer.tokenizer import Tokenizer
 
     # -- Get the data -- #
-    PATH_SAMPLE = Path("../../../data/samples/sample_10_train.csv")
+    PATH_SAMPLE = Path("../../../data/samples/sample_1000_train.csv")
     SAMPLE = pd.read_csv(PATH_SAMPLE).to_numpy()
 
     # -- Get the original tweets -- #
     TWEET_ORIGINALS = SAMPLE[:, 1]
-
+    print(TWEET_ORIGINALS[19])
     # -- Define the tokenizer -- #
     TOKENIZER = Tokenizer()
 
-    SENTENCE_SIZE = 2
+    SENTENCE_SIZE = 50
 
-    print(create_strings(TWEET_ORIGINALS, TOKENIZER, SENTENCE_SIZE))
+    print(create_strings(TWEET_ORIGINALS, TOKENIZER, SENTENCE_SIZE)[19])
