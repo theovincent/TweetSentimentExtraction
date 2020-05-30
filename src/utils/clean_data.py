@@ -6,8 +6,9 @@ def clean_data(data):
     n = len(data)
     for i in range(n - 1, -1, -1):
         first_label = WordPunctTokenizer().tokenize(data[i, 2])[0]
+        last_label = WordPunctTokenizer().tokenize(data[i, 2])[-1]
         text = WordPunctTokenizer().tokenize(data[i, 1])
-        if first_label not in text:
+        if (first_label not in text) or (last_label not in text):
             data = np.delete(data, i, axis=0)
     return data
 
