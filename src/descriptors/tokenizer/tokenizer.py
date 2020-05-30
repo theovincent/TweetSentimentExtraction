@@ -1,4 +1,4 @@
-from src.descriptors.tokenizer.modify_nltk.modified_tweet_tokenizer import TweetTokenizerReducedLen
+from descriptors.tokenizer.modify_nltk.modified_tweet_tokenizer import TweetTokenizerReducedLen
 
 
 class Tokenizer:
