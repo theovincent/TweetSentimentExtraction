@@ -38,8 +38,8 @@ def create_labels(x_sentence, y_string, sentence_size):
 
 
 if __name__ == "__main__":
-    EX = ["i", "feel", "really", "bored", "."]
-    EX_LABEL = ["bored", "."]
+    EX = ['Too', 'many', 'cocktails', 'last', 'night', ',', 'my', 'head', 'hurts']
+    EX_LABEL = ["hurts"]
 
     print(EX)
     print(EX_LABEL)
