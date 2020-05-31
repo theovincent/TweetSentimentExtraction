@@ -1,3 +1,7 @@
 *.jpg
 *.png
 *.PNG
+!FINAL_glove_knn_train_1000_neighbors_300_nb_thresholds_15_pos_neg.jpg
+!FINAL_glove_knn_train_1000_neighbors_400_nb_thresholds_15.jpg
+!FINAL_mlp_all.jpg
+!FINAL_mlp_pos_neg.jpg
