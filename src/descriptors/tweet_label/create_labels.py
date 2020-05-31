@@ -14,9 +14,10 @@ def convert_label(sentence, label, sentence_size):
     sol = 0
     for p in possibles:
         check = sentence[p: p + n]
-        if np.all(check == label):
-            sol = p
-            break
+        if len(check) == n:
+            if np.all(check == label):
+                sol = p
+                break
 
     new_label[sol: sol + n] = 1
     # new_label = np.concatenate((new_label, np.zeros(max(0, sentence_size - len(sentence)))))
