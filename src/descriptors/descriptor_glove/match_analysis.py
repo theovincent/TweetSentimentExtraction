@@ -15,20 +15,17 @@ def find_word(word, dictionary, additional_dic):
     return np.sum(search) > 0
 
 
-def separation(tweet, tokenizer):
-    word = tokenizer.tokenize(tweet)
+def separation(tweet, tokenizer, sentence_size):
+    word = tokenizer.tokenize(tweet, sentence_size)
     return word
 
 
-def match_percent(tweets, dictionary, additional_dic):
+def match_percent(tweets, tokenizer, dictionary, additional_dic, sentence_size):
     matches = 0
-
-    # Initialize tokenizer
-    tokenizer = TweetTokenizer(strip_handles=True)
 
     for tweet in tweets:
         matches_tweet = 0
-        words = separation(tweet, tokenizer)
+        words = separation(tweet, tokenizer, sentence_size)
         for word in words:
             find = find_word(word, dictionary, additional_dic)
             if not find:
@@ -40,20 +37,26 @@ def match_percent(tweets, dictionary, additional_dic):
 
 
 if __name__ == "__main__":
+    from descriptors.tokenizer.tokenizer import Tokenizer
+
     # -- Get the data -- #
     PATH_SAMPLE = Path("../../../data/samples/sample_1000_train.csv")
     SAMPLE = pd.read_csv(PATH_SAMPLE).to_numpy()
 
     # -- Get the tweet_scalar_glove -- #
-    PATH_DICTIONARY = Path("../../../data/descriptor_glove/glove.6B.50d.txt")
+    PATH_DICTIONARY = Path("../../../data/glove_descriptor/glove.6B.50d.txt")
     DICTIONARY = pd.read_csv(PATH_DICTIONARY, sep=" ", header=None)
 
     ADDITIONAL_DIC = {"..": "...", "<3": "love"}
 
     # -- Get the text -- #
     TWEETS = SAMPLE[:, 1]
+    SENTENTCE_SIZE = 50
 
-    PERCENT_MATCH = match_percent(TWEETS, DICTIONARY, ADDITIONAL_DIC)
+    # -- Initialise tokenizer -- #
+    TOKENIZER = Tokenizer()
+
+    PERCENT_MATCH = match_percent(TWEETS, TOKENIZER,  DICTIONARY, ADDITIONAL_DIC, SENTENTCE_SIZE)
     print("The percentage of matches is :", PERCENT_MATCH)
 
     # Low case : 95 % percent of match with 1000 samples
